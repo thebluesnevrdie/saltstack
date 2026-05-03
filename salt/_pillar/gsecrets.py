@@ -8,11 +8,11 @@ Example configuration:
     ext_pillar:
       - gsecrets:
           namespace: secrets
-          project_id: google-test
-          top:
-            node:
-              - database_pw
-
+          projects:
+            google-test:
+              top:
+                minion01:
+                  - database_pw
 
 """
 
@@ -47,7 +47,7 @@ def ext_pillar(minion_id, pillar, projects, namespace=None):
         temp_data = {}
         # populate temp_data with all secret data
         for secret_name in __utils__["gsecrets.list_secrets"](project_id):
-            raw_data = __utils__["gsecrets.get_secret_data"](project_id, secret_name)
+            raw_data = __utils__["gsecrets.get_secret_data"](project_id, secret_name, "latest")
             if raw_data[0]:
                 temp_data[secret_name] = raw_data[1]
 
